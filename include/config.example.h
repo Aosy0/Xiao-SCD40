@@ -8,7 +8,8 @@ constexpr const char* WIFI_PASSWORD = "your-password";
 // NTP
 constexpr const char* NTP_SERVER1 = "ntp.nict.jp";
 constexpr const char* NTP_SERVER2 = "time.google.com";
-constexpr const long   TIMEZONE_OFFSET = 9 * 3600;  // JST = UTC+9
+// POSIX タイムゾーン文字列 (JST=UTC+9, DSTなし)
+constexpr const char* TIMEZONE_STR = "JST-9";
 
 // I2C
 constexpr uint8_t I2C_SDA = 6;

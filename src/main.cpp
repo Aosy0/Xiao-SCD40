@@ -99,7 +99,7 @@ void setup() {
         display.drawString(0, 0, "NTP sync...");
         display.display();
 
-        configTime(TIMEZONE_OFFSET, 0, NTP_SERVER1, NTP_SERVER2);
+        configTzTime(TIMEZONE_STR, NTP_SERVER1, NTP_SERVER2);
 
         struct tm timeinfo;
         bool ntpOk = false;
@@ -114,6 +114,21 @@ void setup() {
             char buf[64];
             strftime(buf, sizeof(buf), "Time: %Y/%m/%d %H:%M:%S", &timeinfo);
             Serial.println(buf);
+
+            // --- Debug: compare UTC and local time ---
+            time_t now_t = time(nullptr);
+            struct tm timeinfo_utc;
+            gmtime_r(&now_t, &timeinfo_utc);
+            char buf_utc[64];
+            strftime(buf_utc, sizeof(buf_utc), "%H:%M:%S", &timeinfo_utc);
+            Serial.printf("DEBUG: epoch=%ld  UTC=%s  JST(local)=%s  tz=%s\n",
+                          (long)now_t, buf_utc, buf, TIMEZONE_STR);
+
+            time_t test_t = 0;
+            struct tm test_tm;
+            localtime_r(&test_t, &test_tm);
+            strftime(buf, sizeof(buf), "%H:%M:%S", &test_tm);
+            Serial.printf("DEBUG: epoch 0 localtime = %s (expect 09:00:00 for JST)\n", buf);
         } else {
             Serial.println("NTP FAILED");
         }
